@@ -1,89 +1,907 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
+<html lang="uz">
 
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.6.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.6.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.6.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Do'kon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-      });
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-top: 70px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            height: 70px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1100;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        nav ul li a:hover {
+            color: #ffd700;
+        }
+
+        .akkaunt {
+            display: flex;
+            gap: 15px;
+        }
+
+        .akkaunt button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .akkaunt button:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Carousel */
+        .carousel-item img {
+            height: 500px;
+            object-fit: cover;
+        }
+
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        /* Search Box */
+        .search-box {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            gap: 10px;
+        }
+
+        .search-box input {
+            width: 500px;
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-box button {
+            padding: 12px 25px;
+            border: none;
+            background: #667eea;
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .search-box button:hover {
+            background: #5568d3;
+        }
+
+        /* Categories */
+        .categories {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .categories button {
+            padding: 12px 30px;
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .categories button:hover,
+        .categories button.active {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Container */
+        .container-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-info h3 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .product-info .price {
+            font-size: 1.5rem;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .product-info .category {
+            display: inline-block;
+            padding: 5px 15px;
+            background: #e8eaf6;
+            color: #667eea;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            color: #999;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            color: #f44336;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-body h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .modal-body .price {
+            font-size: 2rem;
+            color: #667eea;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .modal-body .description {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .order-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .order-form input {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .order-form input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .order-form button {
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .order-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-section ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #667eea;
+            border-radius: 50%;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .social-links a:hover {
+            background: #5568d3;
+            transform: translateY(-3px);
+        }
+
+        /* Telegram Float Button */
+        .telegram-float {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            z-index: 1000;
+        }
+
+        .telegram-float a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 60px;
+            height: 60px;
+            background: #0088cc;
+            border-radius: 50%;
+            color: white;
+            font-size: 30px;
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.4);
+            transition: 0.3s;
+        }
+
+        .telegram-float a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.5);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #667eea;
+        }
+
+        .loading i {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header {
+                padding: 0 20px;
+            }
+
+            .logo1 {
+                display: none;
+                position: absolute;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background: #667eea;
+                padding: 20px;
+            }
+
+            .logo1.active {
+                display: block;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .akkaunt {
+                display: none;
+            }
+
+            .search-box input {
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .product-card img {
+                height: 180px;
+            }
+
+            .carousel-item img {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-shopping-bag"></i>
+            <span>TechShop</span>
+        </div>
+
+        <button class="hamburger" id="hamburger">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <nav class="logo1" id="navbar">
+            <ul>
+                <li><a href="#"><i class="fas fa-home"></i> Bosh sahifa</a></li>
+                <li><a href="#"><i class="fas fa-info-circle"></i> Biz haqimizda</a></li>
+                <li><a href="#"><i class="fas fa-concierge-bell"></i> Xizmatlar</a></li>
+                <li><a href="#"><i class="fas fa-phone"></i> Aloqa</a></li>
+            </ul>
+        </nav>
+
+        <div class="akkaunt">
+            <button><i class="fas fa-shopping-cart"></i> Savat</button>
+            <button><i class="fas fa-user"></i> Kirish</button>
+        </div>
+    </header>
+
+    <!-- Carousel -->
+    <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#carouselExample" data-bs-slide-to="2"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=1200" alt="Smartphones">
+                <div class="carousel-caption">
+                    <h2>Eng yangi smartfonlar</h2>
+                    <p>Ajoyib narxlar va yuqori sifat</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?w=1200" alt="Smartwatch">
+                <div class="carousel-caption">
+                    <h2>Smart soatlar</h2>
+                    <p>Hayotingizni osonlashtiring</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=1200" alt="Headphones">
+                <div class="carousel-caption">
+                    <h2>Premium audio</h2>
+                    <p>Mukammal tovush tajribasi</p>
+                </div>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container-wrapper">
+        <!-- Search Box -->
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Mahsulotlarni qidiring...">
+            <button onclick="searchProducts()"><i class="fas fa-search"></i></button>
+        </div>
+
+        <!-- Categories -->
+        <div class="categories">
+            <button class="active" data-category="all" onclick="filterByCategory('all')">
+                <i class="fas fa-th"></i> Hammasi
+            </button>
+            <button data-category="samsung" onclick="filterByCategory('samsung')">
+                <i class="fas fa-mobile-alt"></i> Samsung
+            </button>
+            <button data-category="apple" onclick="filterByCategory('apple')">
+                <i class="fab fa-apple"></i> Apple
+            </button>
+            <button data-category="xiaomi" onclick="filterByCategory('xiaomi')">
+                <i class="fas fa-mobile"></i> Xiaomi
+            </button>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="loadingProducts" class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Mahsulotlar yuklanmoqda...</p>
+        </div>
+
+        <div class="products-grid" id="productsGrid" style="display: none;">
+            <!-- Products will be loaded here -->
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <img id="modalImage" class="modal-image" src="" alt="">
+            <div class="modal-body">
+                <h2 id="modalTitle"></h2>
+                <div class="price" id="modalPrice"></div>
+                <p class="description" id="modalDescription"></p>
+
+                <h4 style="margin-bottom: 15px;">Buyurtma berish</h4>
+                <div class="order-form">
+                    <input type="text" id="userName" placeholder="Ismingiz" required>
+                    <input type="tel" id="userPhone" placeholder="Telefon raqamingiz" required>
+                    <button onclick="sendOrder()">
+                        <i class="fas fa-paper-plane"></i> Buyurtma berish
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Hujjatlar</h3>
+                <ul>
+                    <li><a href="#">Sotish shartlari</a></li>
+                    <li><a href="#">Nizom</a></li>
+                    <li><a href="#">Maxfiylik siyosati</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Xizmatlar</h3>
+                <ul>
+                    <li><a href="#">Muddatli to'lov</a></li>
+                    <li><a href="#">Yetkazib berish</a></li>
+                    <li><a href="#">Qaytarish siyosati</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Katalog</h3>
+                <ul>
+                    <li><a href="#">Smartfonlar</a></li>
+                    <li><a href="#">Noutbuklar</a></li>
+                    <li><a href="#">Aksessuarlar</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h3>Ijtimoiy tarmoqlar</h3>
+                <div class="social-links">
+                    <a href="https://t.me/Boburjon3601" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Telegram Float Button -->
+    <div class="telegram-float">
+        <a href="https://t.me/Boburjon3601" target="_blank">
+            <i class="fab fa-telegram-plane"></i>
+        </a>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getDatabase, ref, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+        import { initializeApp } from "firebase/app";
+        import { getAnalytics } from "firebase/analytics";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBCiv22Z0SKWKba0r0_J3Sc_naAA_c1vcg",
+            authDomain: "messenger-ali.firebaseapp.com",
+            projectId: "messenger-ali",
+            storageBucket: "messenger-ali.firebasestorage.app",
+            messagingSenderId: "596917405424",
+            appId: "1:596917405424:web:c7604f94414a043d02e435",
+            measurementId: "G-HT32ZTLL7G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        let allProducts = [];
+        let currentProduct = null;
+
+        // Load products from Firebase
+        function loadProducts() {
+            const productsRef = ref(database, 'products');
+
+            onValue(productsRef, (snapshot) => {
+                const loading = document.getElementById('loadingProducts');
+                const grid = document.getElementById('productsGrid');
+
+                loading.style.display = 'none';
+                grid.style.display = 'grid';
+
+                allProducts = [];
+                snapshot.forEach((childSnapshot) => {
+                    allProducts.push({
+                        id: childSnapshot.key,
+                        ...childSnapshot.val()
+                    });
+                });
+
+                displayProducts(allProducts);
+            });
+        }
+
+        // Display products
+        function displayProducts(products) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            if (products.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999; padding: 40px;">Mahsulotlar topilmadi</p>';
+                return;
+            }
+
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => openModal(product);
+                card.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <div class="product-info">
+            <h3>${product.name}</h3>
+            <div class="price">$${product.price}</div>
+            <span class="category">${product.category}</span>
+          </div>
+        `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Filter by category
+        window.filterByCategory = function (category) {
+            const buttons = document.querySelectorAll('.categories button');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.closest('button').classList.add('active');
+
+            if (category === 'all') {
+                displayProducts(allProducts);
+            } else {
+                const filtered = allProducts.filter(p => p.category === category);
+                displayProducts(filtered);
+            }
+        };
+
+        // Search products
+        window.searchProducts = function () {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = allProducts.filter(p =>
+                p.name.toLowerCase().includes(query) ||
+                p.description?.toLowerCase().includes(query)
+            );
+            displayProducts(filtered);
+        };
+
+        document.getElementById('searchInput').addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') searchProducts();
+        });
+
+        // Open modal
+        window.openModal = function (product) {
+            currentProduct = product;
+            document.getElementById('modalImage').src = product.image;
+            document.getElementById('modalTitle').textContent = product.name;
+            document.getElementById('modalPrice').textContent = `$${product.price}`;
+            document.getElementById('modalDescription').textContent = product.description || 'Mahsulot haqida ma\'lumot mavjud emas';
+            document.getElementById('productModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        };
+
+        // Close modal
+        window.closeModal = function () {
+            document.getElementById('productModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+            document.getElementById('userName').value = '';
+            document.getElementById('userPhone').value = '';
+        };
+
+        // Send order to Telegram
+        window.sendOrder = async function () {
+            const name = document.getElementById('userName').value;
+            const phone = document.getElementById('userPhone').value;
+
+            if (!name || !phone) {
+                alert('Iltimos, barcha maydonlarni to\'ldiring!');
+                return;
+            }
+
+            const BOT_TOKEN = '8361286034:AAGhhavjiXhqDKoOxIcN1WcOx5TfUU_pSH4';
+            const CHAT_ID = '5655390425';
+
+            const message = `🛍️ YANGI BUYURTMA!
+
+👤 Ism: ${name}
+📞 Telefon: ${phone}
+📦 Mahsulot: ${currentProduct.name}
+💰 Narx: $${currentProduct.price}
+🏷️ Kategoriya: ${currentProduct.category}`;
+
+            try {
+                const response = await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: CHAT_ID,
+                        text: message,
+                        parse_mode: 'HTML'
+                    })
+                });
+
+                if (response.ok) {
+                    alert('✅ Buyurtma muvaffaqiyatli yuborildi! Tez orada siz bilan bog\'lanamiz.');
+                    closeModal();
+                } else {
+                    alert('❌ Xatolik yuz berdi. Iltimos, qaytadan urinib ko\'ring.');
+                }
+            } catch (error) {
+                alert('❌ Tarmoq xatosi: ' + error.message);
+            }
+        };
+
+        // Hamburger menu
+        document.getElementById('hamburger').addEventListener('click', () => {
+            document.getElementById('navbar').classList.toggle('active');
+        });
+
+        // Close modal on outside click
+        document.getElementById('productModal').addEventListener('click', (e) => {
+            if (e.target.id === 'productModal') closeModal();
+        });
+
+        // Initialize
+        loadProducts();
     </script>
-  </body>
+</body>
+
 </html>
+
+
+<!-- 
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyBCiv22Z0SKWKba0r0_J3Sc_naAA_c1vcg",
+  authDomain: "messenger-ali.firebaseapp.com",
+  projectId: "messenger-ali",
+  storageBucket: "messenger-ali.firebasestorage.app",
+  messagingSenderId: "596917405424",
+  appId: "1:596917405424:web:c7604f94414a043d02e435",
+  measurementId: "G-HT32ZTLL7G"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+-->

@@ -1,0 +1,69 @@
+accounts = {}          # {name: balance}
+history = []           # umumiy transaction tarixi
+
+while True:
+    print("\n1. Create account")
+    print("2. Deposit")
+    print("3. Withdraw")
+    print("4. Check balance")
+    print("5. View transaction history")
+    print("6. Exit")
+
+    choice = input("Tanlang: ")
+
+    # Create account
+    if choice == "1":
+        name = input("Account name: ")
+        if name in accounts:
+            print("Bu account bor!")
+        else:
+            balance = float(input("Start balance: "))
+            accounts[name] = balance
+            history.append(f"{name} → account created with {balance}")
+            print("Account yaratildi!")
+
+    # Deposit
+    elif choice == "2":
+        name = input("Account name: ")
+        if name in accounts:
+            amount = float(input("Deposit amount: "))
+            accounts[name] += amount
+            history.append(f"{name} → deposited {amount}")
+            print("Deposit muvaffaqiyatli!")
+        else:
+            print("Bu account topilmadi.")
+
+    # Withdraw
+    elif choice == "3":
+        name = input("Account name: ")
+        if name in accounts:
+            amount = float(input("Withdraw amount: "))
+            if accounts[name] >= amount:
+                accounts[name] -= amount
+                history.append(f"{name} → withdrew {amount}")
+                print("Pul yechildi!")
+            else:
+                print("Balans yetarli emas!")
+        else:
+            print("Account topilmadi.")
+
+    # Check balance
+    elif choice == "4":
+        name = input("Account name: ")
+        if name in accounts:
+            print(f"{name} balansi: {accounts[name]}")
+        else:
+            print("Account topilmadi.")
+
+    # View transaction history
+    elif choice == "5":
+        print("\n--- TRANSACTION HISTORY ---")
+        for h in history:
+            print(h)
+
+    elif choice == "6":
+        print("Dastur yakunlandi.")
+        break
+
+    else:
+        print("Noto‘g‘ri tanlov!")
