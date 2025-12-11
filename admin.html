@@ -459,24 +459,28 @@
     </div>
 
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, set, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
+      
+    import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getDatabase, ref, set, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBCiv22Z0SKWKba0r0_J3Sc_naAA_c1vcg",
-            authDomain: "messenger-ali.firebaseapp.com",
-            databaseURL: "https://messenger-ali-default-rtdb.firebaseio.com",
-            projectId: "messenger-ali",
-            storageBucket: "messenger-ali.firebasestorage.app",
-            messagingSenderId: "596917405424",
-            appId: "1:596917405424:web:c7604f94414a043d02e435"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyBCiv22Z0SKWKba0r0_J3Sc_naAA_c1vcg",
+        authDomain: "messenger-ali.firebaseapp.com",
+        databaseURL: "https://messenger-ali-default-rtdb.firebaseio.com",
+        projectId: "messenger-ali",
+        storageBucket: "messenger-ali.firebasestorage.app",
+        messagingSenderId: "596917405424",
+        appId: "1:596917405424:web:c7604f94414a043d02e435"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const database = getDatabase(app);
+    // initializeApp faqat bir marta chaqiriladi
+    const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+    const database = getDatabase(app);
 
-        let currentEditId = null;
-        let currentImageBase64 = null;
+    let currentEditId = null;
+    let currentImageBase64 = null;
+
+   
 
         function showAlert(message, type = 'success') {
             const alert = document.createElement('div');
