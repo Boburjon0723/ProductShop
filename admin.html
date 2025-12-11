@@ -622,7 +622,7 @@
             }
 
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-save"></i> <span id="submitText">Saqlash</span>';
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Saqlash';
         });
 
         window.editProduct = async function(id) {
@@ -667,23 +667,13 @@
         };
 
         function resetForm() {
-            const form = document.getElementById('productForm');
-            const editId = document.getElementById('editId');
-            const imagePreview = document.getElementById('imagePreview');
-            const formTitle = document.getElementById('formTitle');
-            const submitText = document.getElementById('submitText');
-            const cancelBtn = document.getElementById('cancelBtn');
-            
-            if (form) form.reset();
-            if (editId) editId.value = '';
-            if (imagePreview) {
-                imagePreview.innerHTML = '<span>Rasm tanlanmagan</span>';
-                imagePreview.classList.add('empty');
-            }
-            if (formTitle) formTitle.textContent = 'Yangi Mahsulot';
-            if (submitText) submitText.textContent = 'Saqlash';
-            if (cancelBtn) cancelBtn.style.display = 'none';
-            
+            document.getElementById('productForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('imagePreview').innerHTML = '<span>Rasm tanlanmagan</span>';
+            document.getElementById('imagePreview').classList.add('empty');
+            document.getElementById('formTitle').textContent = 'Yangi Mahsulot';
+            document.getElementById('submitText').textContent = 'Saqlash';
+            document.getElementById('cancelBtn').style.display = 'none';
             currentImageBase64 = null;
             currentEditId = null;
         }
