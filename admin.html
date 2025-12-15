@@ -133,9 +133,27 @@
             transition: transform 0.2s;
         }
 
-        .btn-submit:hover {
+        .btn-submit:hover:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-cancel {
+            width: 100%;
+            padding: 12px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
         }
 
         .products-section {
@@ -183,7 +201,6 @@
             border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s;
-            position: relative;
         }
 
         .product-card:hover {
@@ -293,6 +310,7 @@
             font-weight: 600;
             z-index: 9999;
             animation: slideIn 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes slideIn {
@@ -313,10 +331,6 @@
 
         .alert-error {
             background: #f44336;
-        }
-
-        .alert-info {
-            background: #2196F3;
         }
 
         .stats {
@@ -370,7 +384,6 @@
 
 <body>
     <div class="admin-container">
-        <!-- Header -->
         <div class="admin-header">
             <div>
                 <h1><i class="fas fa-dashboard"></i> Admin Panel</h1>
@@ -383,12 +396,9 @@
             </div>
         </div>
 
-        <!-- Main Content -->
         <div class="admin-content">
-            <!-- Form Section -->
             <div class="form-section">
                 <h2><i class="fas fa-plus-circle"></i> <span id="formTitle">Yangi Mahsulot</span></h2>
-
                 <form id="productForm">
                     <input type="hidden" id="editId">
 
@@ -420,19 +430,23 @@
 
                     <div class="form-group">
                         <label><i class="fas fa-image"></i> Rasm yuklash</label>
-                        <input type="file" id="productImage" accept="image/*" required>
+                        <input type="file" id="productImage" accept="image/*">
                         <div class="image-preview empty" id="imagePreview">
                             <span>Rasm tanlanmagan</span>
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-submit">
+                    <button type="submit" class="btn-submit" id="submitBtn">
                         <i class="fas fa-save"></i> <span id="submitText">Saqlash</span>
+                    </button>
+
+                    <button type="button" class="btn-cancel" id="cancelBtn" style="display: none;"
+                        onclick="cancelEdit()">
+                        <i class="fas fa-times"></i> Bekor qilish
                     </button>
                 </form>
             </div>
 
-            <!-- Products Section -->
             <div class="products-section">
                 <div class="stats">
                     <div class="stat-card">
@@ -444,7 +458,7 @@
                         <p>Kategoriyalar</p>
                     </div>
                     <div class="stat-card">
-                        <h3 id="lastUpdated">Bugun</h3>
+                        <h3 id="lastUpdated">Hozir</h3>
                         <p>So'ngi yangilanish</p>
                     </div>
                 </div>
@@ -456,38 +470,31 @@
                     <p>Yuklanmoqda...</p>
                 </div>
 
-                <div class="products-grid" id="productsGrid" style="display: none;">
-                    <!-- Products will be loaded here -->
-                </div>
+                <div class="products-grid" id="productsGrid" style="display: none;"></div>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
     <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
-        import { getDatabase, ref, set, get, remove, onValue, push } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
-        import { getStorage, ref as storageRef, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js'; 
+        import { getDatabase, ref, set, get, remove, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js'
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBCiv22Z0SKWKba0r0_J3Sc_naAA_c1vcg",
             authDomain: "messenger-ali.firebaseapp.com",
+            databaseURL: "https://messenger-ali-default-rtdb.firebaseio.com",
             projectId: "messenger-ali",
             storageBucket: "messenger-ali.firebasestorage.app",
             messagingSenderId: "596917405424",
-            appId: "1:596917405424:web:c7604f94414a043d02e435",
-            measurementId: "G-HT32ZTLL7G"
+            appId: "1:596917405424:web:c7604f94414a043d02e435"
         };
 
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
-        const storage = getStorage(app);
 
         let currentEditId = null;
-        let imageBase64 = null;
+        let currentImageBase64 = null;
 
-        // Show alert
         function showAlert(message, type = 'success') {
             const alert = document.createElement('div');
             alert.className = `alert alert-${type}`;
@@ -496,22 +503,26 @@
             setTimeout(() => alert.remove(), 3000);
         }
 
-        // Image preview
         document.getElementById('productImage').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
+                if (file.size > 5000000) {
+                    showAlert('Rasm hajmi 5MB dan kichik bo\'lishi kerak!', 'error');
+                    this.value = '';
+                    return;
+                }
+
                 const reader = new FileReader();
                 reader.onload = function (event) {
-                    imageBase64 = event.target.result;
+                    currentImageBase64 = event.target.result;
                     const preview = document.getElementById('imagePreview');
-                    preview.innerHTML = `<img src="${imageBase64}" alt="Preview">`;
+                    preview.innerHTML = `<img src="${currentImageBase64}" alt="Preview">`;
                     preview.classList.remove('empty');
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        // Load products
         function loadProducts() {
             const productsRef = ref(database, 'products');
 
@@ -534,7 +545,7 @@
                 document.getElementById('totalProducts').textContent = products.length;
 
                 if (products.length === 0) {
-                    productsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999;">Hozircha mahsulotlar yo\'q</p>';
+                    productsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999; padding: 40px;">Hozircha mahsulotlar yo\'q</p>';
                     return;
                 }
 
@@ -542,81 +553,95 @@
                     const card = document.createElement('div');
                     card.className = 'product-card';
                     card.innerHTML = `
-            <img src="${product.image}" alt="${product.name}">
-            <div class="product-info">
-              <h3>${product.name}</h3>
-              <div class="price">$${product.price}</div>
-              <span class="category">${product.category}</span>
-            </div>
-            <div class="product-actions">
-              <button class="btn-edit" onclick="editProduct('${product.id}')">
-                <i class="fas fa-edit"></i> Tahrirlash
-              </button>
-              <button class="btn-delete" onclick="deleteProduct('${product.id}', '${product.name}')">
-                <i class="fas fa-trash"></i> O'chirish
-              </button>
-            </div>
-          `;
+                        <img src="${product.image}" alt="${product.name}">
+                        <div class="product-info">
+                            <h3>${product.name}</h3>
+                            <div class="price">$${product.price}</div>
+                            <span class="category">${product.category}</span>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn-edit" onclick="window.editProduct('${product.id}')">
+                                <i class="fas fa-edit"></i> Tahrirlash
+                            </button>
+                            <button class="btn-delete" onclick="window.deleteProduct('${product.id}', '${product.name.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-trash"></i> O'chirish
+                            </button>
+                        </div>
+                    `;
                     productsGrid.appendChild(card);
                 });
+            }, (error) => {
+                console.error('Error loading products:', error);
+                showAlert('Mahsulotlarni yuklashda xatolik: ' + error.message, 'error');
             });
         }
 
-        // Add/Update product
         document.getElementById('productForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const name = document.getElementById('productName').value;
+            const name = document.getElementById('productName').value.trim();
             const price = document.getElementById('productPrice').value;
-            const desc = document.getElementById('productDesc').value;
+            const desc = document.getElementById('productDesc').value.trim();
             const category = document.getElementById('productCategory').value;
             const editId = document.getElementById('editId').value;
 
-            if (!imageBase64 && !editId) {
+            if (!name || !price || !category) {
+                showAlert('Iltimos, barcha majburiy maydonlarni to\'ldiring!', 'error');
+                return;
+            }
+
+            if (!currentImageBase64 && !editId) {
                 showAlert('Iltimos, rasm yuklang!', 'error');
                 return;
             }
 
-            const submitBtn = document.querySelector('.btn-submit');
+            const submitBtn = document.getElementById('submitBtn');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saqlanmoqda...';
 
             try {
-                const productId = editId || Date.now().toString();
-                const productData = {
-                    name,
+                const productId = editId || 'prod_' + Date.now();
+
+                let productData = {
+                    name: name,
                     price: parseFloat(price),
-                    description: desc,
-                    category,
-                    image: imageBase64 || document.querySelector(`[data-id="${editId}"]`)?.dataset.image,
-                    createdAt: editId ? undefined : new Date().toISOString(),
+                    description: desc || 'Mahsulot haqida ma\'lumot yo\'q',
+                    category: category,
                     updatedAt: new Date().toISOString()
                 };
+
+                if (currentImageBase64) {
+                    productData.image = currentImageBase64;
+                }
+
+                if (!editId) {
+                    productData.createdAt = new Date().toISOString();
+                    if (!currentImageBase64) {
+                        productData.image = 'https://via.placeholder.com/300x300?text=No+Image';
+                    }
+                } else {
+                    const existingRef = ref(database, 'products/' + editId);
+                    const existingSnap = await get(existingRef);
+                    if (existingSnap.exists() && !currentImageBase64) {
+                        productData.image = existingSnap.val().image;
+                    }
+                }
 
                 await set(ref(database, 'products/' + productId), productData);
 
                 showAlert(editId ? 'Mahsulot muvaffaqiyatli yangilandi!' : 'Mahsulot muvaffaqiyatli qo\'shildi!', 'success');
 
-                // Reset form
-                document.getElementById('productForm').reset();
-                document.getElementById('editId').value = '';
-                document.getElementById('imagePreview').innerHTML = '<span>Rasm tanlanmagan</span>';
-                document.getElementById('imagePreview').classList.add('empty');
-                document.getElementById('formTitle').textContent = 'Yangi Mahsulot';
-                document.getElementById('submitText').textContent = 'Saqlash';
-                imageBase64 = null;
-                currentEditId = null;
-                document.getElementById('productImage').required = true;
+                resetForm();
 
             } catch (error) {
+                console.error('Error:', error);
                 showAlert('Xatolik yuz berdi: ' + error.message, 'error');
             }
 
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-save"></i> <span id="submitText">Saqlash</span>';
+            submitBtn.innerHTML = '<i class="fas fa-save"></i> Saqlash';
         });
 
-        // Edit product
         window.editProduct = async function (id) {
             const productRef = ref(database, 'products/' + id);
             const snapshot = await get(productRef);
@@ -630,20 +655,19 @@
                 document.getElementById('productDesc').value = product.description || '';
                 document.getElementById('productCategory').value = product.category;
 
-                imageBase64 = product.image;
+                currentImageBase64 = product.image;
                 const preview = document.getElementById('imagePreview');
                 preview.innerHTML = `<img src="${product.image}" alt="Preview">`;
                 preview.classList.remove('empty');
 
                 document.getElementById('formTitle').textContent = 'Mahsulotni Tahrirlash';
                 document.getElementById('submitText').textContent = 'Yangilash';
-                document.getElementById('productImage').required = false;
+                document.getElementById('cancelBtn').style.display = 'block';
 
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         };
 
-        // Delete product
         window.deleteProduct = async function (id, name) {
             if (confirm(`"${name}" mahsulotini o'chirishni xohlaysizmi?`)) {
                 try {
@@ -655,16 +679,32 @@
             }
         };
 
-        // Initial load
-        loadProducts();
+        window.cancelEdit = function () {
+            resetForm();
+        };
 
-        // Update last updated time
-        setInterval(() => {
+        function resetForm() {
+            document.getElementById('productForm').reset();
+            document.getElementById('editId').value = '';
+            document.getElementById('imagePreview').innerHTML = '<span>Rasm tanlanmagan</span>';
+            document.getElementById('imagePreview').classList.add('empty');
+            document.getElementById('formTitle').textContent = 'Yangi Mahsulot';
+            document.getElementById('submitText').textContent = 'Saqlash';
+            document.getElementById('cancelBtn').style.display = 'none';
+            currentImageBase64 = null;
+            currentEditId = null;
+        }
+
+        function updateTime() {
             const now = new Date();
             const hours = now.getHours().toString().padStart(2, '0');
             const minutes = now.getMinutes().toString().padStart(2, '0');
             document.getElementById('lastUpdated').textContent = `${hours}:${minutes}`;
-        }, 60000);
+        }
+
+        loadProducts();
+        updateTime();
+        setInterval(updateTime, 60000);
     </script>
 </body>
 
